@@ -1,0 +1,258 @@
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+int pityCounter = 0;
+const int PITY_LIMIT = 20;
+
+// ================= GACHA SYSTEM =================
+string getRandomItem(string& rarity) {
+    int roll = rand() % 1000 + 1;
+
+    // ===== HARD PITY =====
+    if (pityCounter >= PITY_LIMIT) {
+        rarity = "LEGENDARY 🟡🔥 (PITY ACTIVATED)";
+        pityCounter = 0;
+
+        string legendaryItems[] = {
+            "Golden Caramel Deluxe Popcorn",
+            "Volcano Supreme Nachos",
+            "Diamond Truffle Popcorn",
+            "Galaxy Inferno Nachos",
+            "Royal Platinum Popcorn",
+            "Molten Lava Nachos"
+        };
+        return legendaryItems[rand() % 6];
+    }
+
+    if (roll <= 400) {
+        rarity = "Common ⚪";
+        pityCounter++;
+        string items[] = {
+            "Classic Butter Popcorn",
+            "Regular Nachos",
+            "Lightly Salted Popcorn",
+            "Mini Cheese Nachos"
+        };
+        return items[rand() % 4];
+    }
+    else if (roll <= 650) {
+        rarity = "Uncommon 🟢";
+        pityCounter++;
+        string items[] = {
+            "Sweet & Salty Popcorn",
+            "Caramel Popcorn",
+            "BBQ Nachos",
+            "Cheesy Herb Popcorn"
+        };
+        return items[rand() % 4];
+    }
+    else if (roll <= 800) {
+        rarity = "Rare 🔵";
+        pityCounter++;
+        string items[] = {
+            "Cheddar Popcorn",
+            "Loaded Cheese Nachos",
+            "BBQ Popcorn",
+            "Chili Nachos"
+        };
+        return items[rand() % 4];
+    }
+    else if (roll <= 900) {
+        rarity = "Epic 🟣";
+        pityCounter++;
+        string items[] = {
+            "Spicy Sriracha Popcorn",
+            "Fiery Jalapeño Nachos",
+            "Ghost Pepper Popcorn",
+            "Sweet Heat Nachos"
+        };
+        return items[rand() % 4];
+    }
+    else if (roll <= 970) {
+        rarity = "LEGENDARY 🟡🔥";
+        pityCounter = 0;
+        string items[] = {
+            "Golden Caramel Deluxe Popcorn",
+            "Volcano Supreme Nachos",
+            "Diamond Truffle Popcorn",
+            "Galaxy Inferno Nachos",
+            "Royal Platinum Popcorn",
+            "Molten Lava Nachos"
+        };
+        return items[rand() % 6];
+    }
+    else if (roll <= 990) {
+        rarity = "MYTHIC 🔴🔥";
+        pityCounter = 0;
+        string items[] = {
+            "Crimson Dragon Popcorn",
+            "Infernal Obsidian Nachos",
+            "Phoenix Blaze Popcorn",
+            "Demon King Supreme Nachos",
+            "Blood Moon Caramel Popcorn"
+        };
+        return items[rand() % 5];
+    }
+    else if (roll <= 999) {
+        rarity = "SPECIAL ⚫👑 ULTRA RARE";
+        pityCounter = 0;
+        string items[] = {
+            "VOID Emperor Popcorn",
+            "Black Hole Supreme Nachos",
+            "Shadow Realm Caramel",
+            "Eclipse Overlord Nachos",
+            "Dark Matter Infinity Popcorn"
+        };
+        return items[rand() % 5];
+    }
+    else {
+        rarity = "💎⚡ GODLY ⚡💎";
+        pityCounter = 0;
+        string items[] = {
+            "Celestial Titan Popcorn",
+            "Universe Devourer Nachos",
+            "Infinity Crown Caramel",
+            "Omega Flame Supreme",
+            "Eternal Cosmic Emperor Mix"
+        };
+        return items[rand() % 5];
+    }
+}
+
+// ================= MULTI PULL =================
+void multiPull(int amount) {
+
+    cout << "\n🎰🔥 ===== " << amount << " PULL START ===== 🔥🎰\n";
+
+    bool gotEpicOrHigher = false;
+    bool gotLegendaryOrHigher = false;
+
+    for (int i = 1; i <= amount; i++) {
+        string rarity;
+        string item = getRandomItem(rarity);
+
+        if (rarity.find("Epic") != string::npos ||
+            rarity.find("LEGENDARY") != string::npos ||
+            rarity.find("MYTHIC") != string::npos ||
+            rarity.find("SPECIAL") != string::npos ||
+            rarity.find("GODLY") != string::npos)
+            gotEpicOrHigher = true;
+
+        if (rarity.find("LEGENDARY") != string::npos ||
+            rarity.find("MYTHIC") != string::npos ||
+            rarity.find("SPECIAL") != string::npos ||
+            rarity.find("GODLY") != string::npos)
+            gotLegendaryOrHigher = true;
+
+        cout << "\nPull #" << i << "\n";
+        cout << "You pulled: " << item << "\n";
+        cout << "Rarity: " << rarity << "\n";
+    }
+
+    if (amount >= 10 && !gotEpicOrHigher) {
+        cout << "\n✨ BONUS GUARANTEED EPIC! ✨\n";
+        cout << "You pulled: Ghost Pepper Popcorn\n";
+        cout << "Rarity: Epic 🟣 (Guaranteed)\n";
+        pityCounter++;
+    }
+
+    if (amount >= 20 && !gotLegendaryOrHigher) {
+        cout << "\n👑 BONUS GUARANTEED LEGENDARY! 👑\n";
+        cout << "You pulled: Golden Caramel Deluxe Popcorn\n";
+        cout << "Rarity: LEGENDARY 🟡🔥 (Guaranteed)\n";
+        pityCounter = 0;
+    }
+
+    cout << "\n🎰🔥 ===== PULL END ===== 🔥🎰\n\n";
+}
+
+// ================= MAIN PROGRAM =================
+int main() {
+    srand(time(0));
+
+    string mood, genre;
+    int gachaChoice;
+
+    cout << "🍿 Welcome to the Popcorn Flavor Decider App! 🍿\n\n";
+
+    // ===== FLAVOR DECIDER =====
+    cout << "What's your mood? (happy, sad, adventurous, romantic, relaxed): ";
+    cin >> mood;
+
+    cout << "What genre of movie are you watching? (action, comedy, horror, romance, drama, sci-fi): ";
+    cin >> genre;
+
+    cout << "\nAnalyzing your vibe...\n\n";
+
+    string recommendation;
+
+    if (mood == "happy") {
+        if (genre == "comedy")
+            recommendation = "Caramel Popcorn";
+        else if (genre == "action")
+            recommendation = "Cheddar Popcorn";
+        else
+            recommendation = "Classic Butter Popcorn";
+    }
+    else if (mood == "sad") {
+        if (genre == "romance" || genre == "drama")
+            recommendation = "Chocolate Drizzle Popcorn";
+        else
+            recommendation = "Sweet & Salty Popcorn";
+    }
+    else if (mood == "adventurous") {
+        if (genre == "sci-fi")
+            recommendation = "Spicy Sriracha Popcorn";
+        else if (genre == "horror")
+            recommendation = "Ghost Pepper Popcorn";
+        else
+            recommendation = "BBQ Popcorn";
+    }
+    else if (mood == "romantic") {
+        if (genre == "romance")
+            recommendation = "Strawberry & White Chocolate Popcorn";
+        else
+            recommendation = "Caramel Popcorn";
+    }
+    else if (mood == "relaxed") {
+        recommendation = "Classic Butter Popcorn";
+    }
+    else {
+        recommendation = "Surprise Mix Popcorn";
+    }
+
+    cout << "🎬 Your perfect popcorn flavor is: " 
+         << recommendation << "!\n";
+
+    // ===== GACHA MENU =====
+    cout << "\nWould you like to do a Gacha pull?\n";
+    cout << "1. Single Pull\n";
+    cout << "2. 5 Pull\n";
+    cout << "3. 10 Pull (Epic Guaranteed)\n";
+    cout << "4. 20 Pull (Legendary Guaranteed)\n";
+    cout << "5. No Thanks\n";
+    cout << "Choice: ";
+    cin >> gachaChoice;
+
+    if (gachaChoice == 1)
+        multiPull(1);
+    else if (gachaChoice == 2)
+        multiPull(5);
+    else if (gachaChoice == 3)
+        multiPull(10);
+    else if (gachaChoice == 4)
+        multiPull(20);
+    else
+        cout << "Maybe next time!\n";
+
+    cout << "\nCurrent Pity Counter: "
+         << pityCounter << " / " << PITY_LIMIT << "\n";
+
+    cout << "\nEnjoy your movie night! 🍿✨\n";
+
+    return 0;
+}
